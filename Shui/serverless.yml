@@ -1,0 +1,66 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: fe24distans
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: Shui
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  iam:
+    role: arn:aws:iam::618077882319:role/fe24-lecture-role
+  httpApi:
+    cors: true
+
+functions:
+  getMessages:
+    handler: functions/getImages/index.handler
+    events:
+      - httpApi:
+          path: /api/messages
+          method: get
+  postMessages:
+    handler: functions/postMessages/index.handler
+    events:
+      - httpApi:
+          path: /api/messages
+          method: post
+  putMessages:
+    handler: functions/putMessages/index.handler
+    events:
+      - httpApi:
+          path: /api/messages/{id}
+          method: put
+
+resources:
+  Resources:
+    messages:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: messages
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+          - AttributeName: sk
+            AttributeType: S
+          - AttributeName: messages
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH # HASH = Partition key
+          - AttributeName: sk
+            KeyType: RANGE # RANGE = Sort key
+        GlobalSecondaryIndexes:
+          - IndexName: messageIndex
+            KeySchema:
+              - AttributeName: message
+                KeyType: HASH
+              - AttributeName: pk
+                KeyType: RANGE
+            Projection:
+              ProjectionType: INCLUDE
+              NonKeyAttributes:
+                - id
+                - username
+                - text
+                - createdAt
+        BillingMode: PAY_PER_REQUEST
