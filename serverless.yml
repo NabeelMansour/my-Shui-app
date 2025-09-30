@@ -6,6 +6,7 @@ service: Shui
 provider:
   name: aws
   runtime: nodejs20.x
+  region: eu-north-1
   iam:
     role: arn:aws:iam::618077882319:role/fe24-lecture-role
   httpApi:
@@ -13,7 +14,7 @@ provider:
 
 functions:
   getMessages:
-    handler: functions/getImages/index.handler
+    handler: functions/getMessages/index.handler
     events:
       - httpApi:
           path: /api/messages
@@ -52,7 +53,7 @@ resources:
         GlobalSecondaryIndexes:
           - IndexName: messageIndex
             KeySchema:
-              - AttributeName: message
+              - AttributeName: messages
                 KeyType: HASH
               - AttributeName: pk
                 KeyType: RANGE
