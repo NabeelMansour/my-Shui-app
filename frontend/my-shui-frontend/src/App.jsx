@@ -79,10 +79,8 @@ function App() {
 
       const data = await res.json();
 
-      // Update frontend instantly with new message
       setMessages((prev) => [...prev, data[0] || payload]);
 
-      // Close modal and reset input
       setNewMessage("");
       setIsModalOpen(false);
     } catch (err) {
