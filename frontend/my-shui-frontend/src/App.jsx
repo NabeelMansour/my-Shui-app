@@ -92,7 +92,7 @@ function App() {
 
   return (
     <main>
-      <h3>Message Board</h3>
+      <h3>Shui Board</h3>
       <section className="message-list">
         {messages.length === 0 ? (
           <h2 className="">No messages written 👀</h2>
@@ -154,14 +154,17 @@ function App() {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              placeholder="Enter your username"
             />
             <textarea
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder="Type your message..."
             />
-            <button onClick={handleAddMessage}>Save</button>
-            <button onClick={() => setIsModalOpen(false)}>Cancel</button>
+            <div className="modal-btn">
+              <button onClick={handleAddMessage}>Save</button>
+              <button onClick={() => setIsModalOpen(false)}>Cancel</button>
+            </div>
           </div>
         </div>
       )}
