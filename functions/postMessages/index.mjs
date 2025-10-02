@@ -2,10 +2,26 @@ import { PutItemCommand, QueryCommand } from "@aws-sdk/client-dynamodb";
 import { client } from "../../services/db.mjs";
 import { nanoid } from "nanoid";
 
+function formatDate(date) {
+  const dayPart = date.toLocaleDateString("da-DK", {
+    weekday: "long",
+    day: "numeric",
+    month: "short",
+  });
+
+  const timePart = date.toLocaleTimeString("da-DK", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  return `${dayPart}, ${timePart}`;
+}
+
 export const handler = async (event) => {
   try {
     const messages = JSON.parse(event.body);
     const createdAt = new Date();
+    const formated = formatDate(createdAt);
     const messageId = nanoid(5);
 
     const command = new PutItemCommand({
@@ -24,12 +40,15 @@ export const handler = async (event) => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify({
-        id: messageId,
-        username: messages.username,
-        text: messages.text,
-        createdAt: createdAt.toISOString(),
-      }),
+      body: JSON.stringify([
+        {
+          id: messageId,
+          username: messages.username,
+          text: messages.text,
+          createdAt: createdAt.toISOString(),
+          createdAtFormatted: formated,
+        },
+      ]),
     };
   } catch (error) {
     return {

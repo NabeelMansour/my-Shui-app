@@ -1,12 +1,28 @@
 import { client } from "../../services/db.mjs";
 import { QueryCommand } from "@aws-sdk/client-dynamodb";
 
+function formatDate(date) {
+  const dayPart = date.toLocaleDateString("da-DK", {
+    weekday: "long",
+    day: "numeric",
+    month: "short",
+  });
+
+  const timePart = date.toLocaleTimeString("da-DK", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  return `${dayPart}, ${timePart}`;
+}
+
 function formatMessage(item) {
   return {
     id: item.pk.S.replace("MESSAGES#", ""),
     username: item.username.S,
     text: item.text.S,
     createdAt: item.createdAt.S,
+    createdAtFormatted: formatDate(new Date(item.createdAt.S)),
   };
 }
 
