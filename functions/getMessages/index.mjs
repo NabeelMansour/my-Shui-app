@@ -2,13 +2,13 @@ import { client } from "../../services/db.mjs";
 import { QueryCommand } from "@aws-sdk/client-dynamodb";
 
 function formatDate(date) {
-  const dayPart = date.toLocaleDateString("da-DK", {
+  const dayPart = date.toLocaleDateString("se-SE", {
     weekday: "long",
     day: "numeric",
     month: "short",
   });
 
-  const timePart = date.toLocaleTimeString("da-DK", {
+  const timePart = date.toLocaleTimeString("se-SE", {
     hour: "2-digit",
     minute: "2-digit",
   });
