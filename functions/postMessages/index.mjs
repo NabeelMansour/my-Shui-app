@@ -3,13 +3,13 @@ import { client } from "../../services/db.mjs";
 import { nanoid } from "nanoid";
 
 function formatDate(date) {
-  const dayPart = date.toLocaleDateString("da-DK", {
+  const dayPart = date.toLocaleDateString("sv-SV", {
     weekday: "long",
     day: "numeric",
     month: "short",
   });
 
-  const timePart = date.toLocaleTimeString("da-DK", {
+  const timePart = date.toLocaleTimeString("sv-SE", {
     hour: "2-digit",
     minute: "2-digit",
   });
