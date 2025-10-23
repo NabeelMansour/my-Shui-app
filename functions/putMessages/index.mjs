@@ -1,9 +1,11 @@
-import { DeleteItemCommand } from "@aws-sdk/client-dynamodb";
+import { UpdateItemCommand } from "@aws-sdk/client-dynamodb";
 import { client } from "../../services/db.mjs";
 
 export const handler = async (event) => {
   try {
     const messageId = event.pathParameters.id;
+    const body = JSON.parse(event.body);
+    console.log("event.body:", event.body);
 
     if (!messageId) {
       return {
@@ -14,16 +16,24 @@ export const handler = async (event) => {
       };
     }
 
-    const command = new DeleteItemCommand({
+    const command = new UpdateItemCommand({
       TableName: "messages",
       Key: {
         pk: { S: `MESSAGES#${messageId}` },
         sk: { S: `PROFILE#${messageId}` },
       },
-      ReturnValues: "ALL_OLD",
+      UpdateExpression: "SET #text = :text",
+      ExpressionAttributeNames: {
+        "#text": "text",
+      },
+      ExpressionAttributeValues: {
+        ":text": { S: body.text },
+      },
+      ReturnValues: "ALL_NEW",
     });
 
     const result = await client.send(command);
+    console.log(result);
 
     if (!result.Attributes) {
       return {
@@ -37,7 +47,7 @@ export const handler = async (event) => {
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: "Message deleted successfully",
+        message: "Message changed successfully",
         messageId: messageId,
       }),
     };
