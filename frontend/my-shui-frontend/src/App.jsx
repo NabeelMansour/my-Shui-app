@@ -12,6 +12,8 @@ function App() {
 
   function handleIconClick(e) {
     const action = e.currentTarget.dataset.action;
+    console.log(action);
+
     const id = e.currentTarget.dataset.id;
 
     if (action === "edit") {
@@ -40,11 +42,14 @@ function App() {
       prev.map((msg) => (msg.id === id ? { ...msg, text: editText } : msg))
     );
 
-    fetch(`https://din-api/messages/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text: editText }),
-    }).catch((err) => console.log(err));
+    fetch(
+      `https://erla64brig.execute-api.eu-north-1.amazonaws.com/api/messages/${id}`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: editText }),
+      }
+    ).catch((err) => console.log(err));
 
     setEditingId(null);
     setEditText("");
